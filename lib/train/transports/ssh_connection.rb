@@ -185,11 +185,12 @@ class Train::Transports::SSH
     # @api private
     def establish_connection(opts)
       logger.debug("[SSH] opening connection to #{self}")
+      instance_variables.each { |v| puts "#{v}: #{instance_variable_get(v)}" }
+
       Net::SSH.start(@hostname, @username, @options.clone.delete_if { |_key, value| value.nil? }.merge(verbose: :debug))
     rescue *RESCUE_EXCEPTIONS_ON_ESTABLISH => e
       puts e
       puts e.inspect
-      instance_variables.each { |v| puts "#{v}: #{instance_variable_get(v)}" }
       
       if (opts[:retries] -= 1) <= 0
         logger.warn("[SSH] connection failed, terminating (#{e.inspect})")
