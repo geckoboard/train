@@ -189,6 +189,8 @@ class Train::Transports::SSH
     rescue *RESCUE_EXCEPTIONS_ON_ESTABLISH => e
       puts e
       puts e.inspect
+      instance_variables.each { |v| puts "#{v}: #{instance_variable_get(v)}" }
+      
       if (opts[:retries] -= 1) <= 0
         logger.warn("[SSH] connection failed, terminating (#{e.inspect})")
         raise Train::Transports::SSHFailed, 'SSH session could not be established'
